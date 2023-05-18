@@ -32,10 +32,11 @@ router.get("/getById/:myid", (req, res)=> {
     res.status(200, {"Content-Type":"application/json"})
     res.json(cast);
     }
-    if (cast == undefined){
-        res.status(404).send({ error: error.message })
-       
+    if (cast == undefined) {
+      res.status(404).send({ error: 'Cast not found' });
     }
+       
+  
   
 });
 
@@ -121,11 +122,14 @@ router.put("/update/:id", (req, res)=> {
     res.send("success");
 });
 
-router.get("/delete/:id", (req, res)=> {
-
-    var id = req.params.id;
-    res.status(200, {"Content-Type":"application/text"})
-    res.send(castModule.removeItem(id));
+router.delete("/delete/:id", (req, res) => {
+  const id = req.params.id;
+  const isRemoved = castModule.removeItem(id);
+  if (isRemoved) {
+    res.status(200).send("true");
+  } else {
+    res.status(404).send({ error: 'Cast not found' });
+  }
 });
 
 
