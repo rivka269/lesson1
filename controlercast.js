@@ -16,7 +16,7 @@ router.get("/", (req, res)=> {
 });
 
 router.get("/getAll", (req, res)=> {
-    
+    //ש'דקגרכאעטיוחןלםךפף'קראטון
     console.log(req.session);
     return res.json(castModule.getAll());
 });
@@ -28,7 +28,7 @@ router.get("/getById/:myid", (req, res)=> {
     var cast = castModule.getItemById(id);
     if (cast != undefined)
     {
-        res.send("wertyuiklkjhgfd"); 
+        
     res.status(200, {"Content-Type":"application/json"})
     res.json(cast);
     }
@@ -39,7 +39,43 @@ router.get("/getById/:myid", (req, res)=> {
   
 });
 
+const axios = require('axios');
 
+async function validatePhone(phone) {
+  const apiKey = 'uxraoiCZnZ8I5WztWMruLj5hQ3kCFIr5';
+  const url = `http://apilayer.net/api/validate?access_key=${apiKey}&number=${phone}`;
+  
+  try {
+    const response = await axios.get(url);
+    const data = response.data;
+    
+    // Return true if the phone number is valid
+    return data.valid;
+  } catch (error) {
+    console.error(error.response.data);
+    return false;
+  }
+}
+
+// router.post("/add", express.json(), async (req, res) => {
+//   const cast = req.body;
+  
+//   if (!cast.email.includes("@") || cast.name == "" || cast.email == "" || cast.id == "" || cast.phone == "") {
+//     res.status(400).send("Bad Request");
+//   } else {
+//     // Call the validation function with the phone number
+//     const isValid = await validatePhone(cast.pone);
+
+//     if (isValid) {
+//       castModule.addItem(cast);
+//       res.status(200).send("Success");
+//     } else {
+//       res.status(401).send("Unauthorized");
+//     }
+//   }
+// });
+
+//zxcvbnm,./,mnbvcxzcvbnm,.
 // const axios = require('axios');
 
 // const ACCESS_KEY = 'uxraoiCZnZ8I5WztWMruLj5hQ3kCFIr5';
@@ -59,16 +95,24 @@ router.get("/getById/:myid", (req, res)=> {
 //   });
 
 
-router.post("/add",express.json(), (req, res)=> {
+router.post("/add",express.json(), async (req, res)=> {
     const cast = req.body;
+
     if(!cast.emele.includes("@")||cast.name==""||cast.emel==""||cast.id==""||cast.pone=="")
     res.send("אין אפשרות");
-    else
-    castModule.addItem(cast);
-//Zxdcfvgbhnjmk,l.Zxcvbn
-    res.status(200, {"Content-Type":"application/text"});
-    res.send("success");
-});
+    else {
+            // Call the validation function with the phone number
+            const isValid = await validatePhone(cast.pone);
+        
+            if (isValid) {
+              castModule.addItem(cast);
+              res.status(200).send("Success");
+            } else {
+              res.status(401).send("Unauthorized");
+            }
+          }
+        });
+        
 
 router.put("/update/:id", (req, res)=> {
     var cast = req.body;
